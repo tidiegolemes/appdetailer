@@ -18,26 +18,41 @@
             background: linear-gradient(rgba(17, 24, 39, 0.8), rgba(17, 24, 39, 0.8)), url('https://images.unsplash.com/photo-1583121274602-3e2820c69888?q=80&w=1920&auto=format&fit=crop') no-repeat center center;
             background-size: cover;
         }
-        .hotspot {
+        .hotspot-wrapper {
             position: absolute;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .hotspot-wrapper:hover {
+            transform: scale(1.1);
+        }
+        .hotspot-dot {
             width: 20px;
             height: 20px;
-            background-color: rgba(220, 38, 38, 0.7); /* Vermelho */
+            background-color: rgba(220, 38, 38, 0.8); /* Vermelho */
             border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s ease;
             border: 2px solid white;
             animation: pulse 2s infinite;
         }
-        .hotspot:hover, .hotspot.active {
-            transform: scale(1.5);
+        .hotspot-wrapper.active .hotspot-dot, .hotspot-wrapper:hover .hotspot-dot {
             background-color: rgba(239, 68, 68, 1);
             animation: none;
         }
+        .hotspot-label {
+            margin-left: 10px;
+            padding: 4px 12px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            font-weight: 600;
+            border-radius: 6px;
+            white-space: nowrap;
+        }
         @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); } /* Vermelho */
-            70% { box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); } /* Vermelho */
-            100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); } /* Vermelho */
+            0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
         }
         .video-reel {
             transition: transform 0.3s ease;
@@ -45,7 +60,6 @@
         .video-reel:hover {
             transform: scale(1.05);
         }
-        /* Modal styles */
         .modal {
             transition: opacity 0.3s ease;
         }
@@ -80,16 +94,25 @@
         <div class="container mx-auto px-6">
             <div class="text-center mb-12">
                 <h2 class="text-4xl font-bold text-white">Serviços Interativos</h2>
-                <p class="text-gray-400 mt-2">Clique nas áreas do veículo para ver os serviços e montar seu pacote.</p>
+                <p class="text-gray-400 mt-2">Clique em uma área do carro para explorar nossos serviços.</p>
             </div>
             <div class="flex flex-col lg:flex-row gap-8 items-start">
                 <!-- Car Image -->
                 <div class="w-full lg:w-2/3 relative">
                     <img src="https://images.unsplash.com/photo-1616422285623-13ff0162193c?q=80&w=1200&auto=format&fit=crop" alt="Carro para detalhamento" class="rounded-lg w-full" onerror="this.onerror=null;this.src='https://placehold.co/1200x700/1f2937/ffffff?text=Imagem+Indisponível';">
-                    <div id="hotspot-exterior" class="hotspot" style="top: 45%; left: 50%;"></div>
-                    <div id="hotspot-interior" class="hotspot" style="top: 40%; left: 65%;"></div>
-                    <div id="hotspot-rodas" class="hotspot" style="top: 78%; left: 75%;"></div>
-                    <div id="hotspot-motor" class="hotspot" style="top: 55%; left: 20%;"></div>
+                    
+                    <div id="hotspot-exterior" class="hotspot-wrapper" style="top: 50%; left: 45%;">
+                        <div class="hotspot-dot"></div><span class="hotspot-label">Exterior e Pintura</span>
+                    </div>
+                    <div id="hotspot-interior" class="hotspot-wrapper" style="top: 42%; left: 65%;">
+                        <div class="hotspot-dot"></div><span class="hotspot-label">Interior</span>
+                    </div>
+                    <div id="hotspot-rodas" class="hotspot-wrapper" style="top: 75%; left: 30%;">
+                        <div class="hotspot-dot"></div><span class="hotspot-label">Rodas e Vidros</span>
+                    </div>
+                    <div id="hotspot-motor" class="hotspot-wrapper" style="top: 50%; left: 15%;">
+                        <div class="hotspot-dot"></div><span class="hotspot-label">Motor</span>
+                    </div>
                 </div>
 
                 <!-- Services Panel -->
@@ -224,16 +247,15 @@
         import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Configuração do Firebase
-        // A variável __firebase_config será injetada pelo ambiente.
         const firebaseConfig = typeof __firebase_config !== 'undefined' 
             ? JSON.parse(__firebase_config)
             : {
                 apiKey: "YOUR_API_KEY",
                 authDomain: "YOUR_AUTH_DOMAIN",
-                projectId: "appdetailler", // Usando o projectId da sua imagem
+                projectId: "appdetailler",
                 storageBucket: "YOUR_STORAGE_BUCKET",
                 messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-                appId: "1:471615025811:web:cb77ae74d7518fee809366" // Usando o appId da sua imagem
+                appId: "1:471615025811:web:cb77ae74d7518fee809366"
             };
 
         // Inicializa o Firebase
@@ -243,10 +265,24 @@
         // Lógica da Interface (UI)
         document.addEventListener('DOMContentLoaded', () => {
             const servicesDB = {
-                exterior: [ { id: 1, name: 'Lavagem Técnica Externa', price: 150 }, { id: 2, name: 'Polimento Técnico', price: 800 }, { id: 3, name: 'Vitrificação de Pintura (1 ano)', price: 1200 }, ],
-                interior: [ { id: 4, name: 'Limpeza Interna Detalhada', price: 250 }, { id: 5, name: 'Higienização de Ar Condicionado', price: 120 }, { id: 6, name: 'Hidratação de Couro', price: 200 }, ],
-                rodas: [ { id: 7, name: 'Limpeza Detalhada de Rodas', price: 80 }, { id: 8, name: 'Vitrificação de Rodas', price: 300 }, ],
-                motor: [ { id: 9, name: 'Limpeza Técnica de Motor', price: 200 }, ]
+                exterior: [
+                    { id: 1, name: 'Lavagem Detalhada', price: 180 },
+                    { id: 2, name: 'Polimento Técnico', price: 900 },
+                    { id: 3, name: 'Vitrificação de Pintura', price: 1500 },
+                    { id: 4, name: 'PPF (Paint Protection Film)', price: 5000 }
+                ],
+                interior: [
+                    { id: 5, name: 'Higienização Interna Completa', price: 350 },
+                    { id: 6, name: 'Hidratação e Vitrificação de Couro', price: 450 },
+                ],
+                rodas: [ // Renomeado para Rodas e Vidros
+                    { id: 7, name: 'Limpeza Detalhada de Rodas', price: 100 },
+                    { id: 8, name: 'Vitrificação de Rodas', price: 350 },
+                    { id: 9, name: 'Remoção de Chuva Ácida e Cristalização de Vidros', price: 250 },
+                ],
+                motor: [
+                    { id: 10, name: 'Limpeza Técnica de Motor', price: 250 },
+                ]
             };
             const hotspots = {
                 exterior: document.getElementById('hotspot-exterior'),
@@ -267,8 +303,11 @@
             function renderServiceOptions(category) {
                 Object.values(hotspots).forEach(h => h.classList.remove('active'));
                 hotspots[category].classList.add('active');
+                
+                const categoryName = hotspots[category].querySelector('.hotspot-label').textContent;
                 const services = servicesDB[category];
-                let optionsHTML = `<h3 class="text-2xl font-bold text-white mb-4 capitalize">${category.replace('_', ' ')}</h3><div class="space-y-3">`;
+                
+                let optionsHTML = `<h3 class="text-2xl font-bold text-white mb-4 capitalize">${categoryName}</h3><div class="space-y-3">`;
                 services.forEach(service => {
                     const isSelected = selectedServices.some(s => s.id === service.id);
                     optionsHTML += `
@@ -310,10 +349,8 @@
                 }
             });
             
-            // Lidar com o envio do formulário de agendamento
             scheduleForm.addEventListener('submit', async (e) => {
-                e.preventDefault(); // Impede o recarregamento da página
-                
+                e.preventDefault();
                 const name = document.getElementById('client-name').value;
                 const vehicle = document.getElementById('vehicle-model').value;
                 const date = document.getElementById('schedule-date').value;
@@ -321,40 +358,32 @@
                 const total = selectedServices.reduce((sum, s) => sum + s.price, 0);
 
                 try {
-                    // Adiciona um novo documento à coleção "agendamentos"
                     const docRef = await addDoc(collection(db, "agendamentos"), {
                         clientName: name,
                         vehicleModel: vehicle,
                         scheduledAt: date,
                         services: services,
                         totalPrice: total,
-                        createdAt: new Date() // Adiciona um timestamp de quando foi criado
+                        createdAt: new Date()
                     });
                     console.log("Documento escrito com ID: ", docRef.id);
-                    
-                    // Mostra o modal de sucesso
                     successModal.classList.remove('hidden');
                     setTimeout(() => successModal.classList.remove('opacity-0'), 10);
-
-                    // Limpa o formulário
                     scheduleForm.reset();
                     selectedServices = [];
                     updateSelectedServices();
                     renderServiceOptions('exterior');
-
                 } catch (error) {
                     console.error("Erro ao adicionar documento: ", error);
                     alert("Ocorreu um erro ao agendar. Tente novamente.");
                 }
             });
 
-            // Fechar o modal
             closeModalBtn.addEventListener('click', () => {
                 successModal.classList.add('opacity-0');
                 setTimeout(() => successModal.classList.add('hidden'), 300);
             });
 
-            // Estado inicial
             renderServiceOptions('exterior');
             updateSelectedServices();
         });
