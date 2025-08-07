@@ -54,29 +54,14 @@
             70% { box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); }
             100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
         }
-        .video-reel {
-            transition: transform 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        .video-reel:hover {
-            transform: scale(1.05);
-        }
-        .video-reel .overlay {
-            position: absolute;
-            inset: 0;
-            background-color: rgba(0,0,0,0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .video-reel:hover .overlay {
-            opacity: 1;
-        }
         .modal {
             transition: opacity 0.3s ease;
+        }
+        .reel-container iframe {
+            width: 100%;
+            height: 580px; /* Altura para se assemelhar ao formato de reel */
+            border: none;
+            border-radius: 8px;
         }
     </style>
 </head>
@@ -156,33 +141,13 @@
         <div class="container mx-auto px-6">
             <div class="text-center mb-12">
                 <h2 class="text-4xl font-bold text-white">Veja a Transformação</h2>
-                <p class="text-gray-400 mt-2">Resultados que falam por si. Clique para assistir.</p>
+                <p class="text-gray-400 mt-2">Resultados que falam por si.</p>
             </div>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <a href="https://www.instagram.com/reel/DJKXJydSvDm/" target="_blank" rel="noopener noreferrer" class="video-reel cursor-pointer rounded-lg">
-                    <img src="https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover">
-                    <div class="overlay">
-                        <svg class="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"></path></svg>
-                    </div>
-                </a>
-                <a href="https://www.instagram.com/reel/DNBu1KeB-ye/" target="_blank" rel="noopener noreferrer" class="video-reel cursor-pointer rounded-lg">
-                    <img src="https://images.unsplash.com/photo-1551431809-a75a765709c2?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover">
-                     <div class="overlay">
-                        <svg class="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"></path></svg>
-                    </div>
-                </a>
-                <a href="https://www.instagram.com/reel/DBysE3rxpQo/" target="_blank" rel="noopener noreferrer" class="video-reel cursor-pointer rounded-lg">
-                    <img src="https://images.unsplash.com/photo-1599499955596-93a86a64489c?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover">
-                     <div class="overlay">
-                        <svg class="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"></path></svg>
-                    </div>
-                </a>
-                <a href="https://www.instagram.com/reel/DM8klf-SiSe/" target="_blank" rel="noopener noreferrer" class="video-reel cursor-pointer rounded-lg">
-                    <img src="https://images.unsplash.com/photo-1617106316359-423c8f7d9f7b?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover">
-                     <div class="overlay">
-                        <svg class="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"></path></svg>
-                    </div>
-                </a>
+            <div id="reels-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="reel-container"><iframe src="https://www.instagram.com/reel/DJKXJydSvDm/embed" frameborder="0" scrolling="no" allowtransparency="true"></iframe></div>
+                <div class="reel-container"><iframe src="https://www.instagram.com/reel/DNBu1KeB-ye/embed" frameborder="0" scrolling="no" allowtransparency="true"></iframe></div>
+                <div class="reel-container"><iframe src="https://www.instagram.com/reel/DBysE3rxpQo/embed" frameborder="0" scrolling="no" allowtransparency="true"></iframe></div>
+                <div class="reel-container"><iframe src="https://www.instagram.com/reel/DM8klf-SiSe/embed" frameborder="0" scrolling="no" allowtransparency="true"></iframe></div>
             </div>
         </div>
     </section>
@@ -275,7 +240,7 @@
             <button id="close-modal-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg">Fechar</button>
         </div>
     </div>
-
+    
     <script type="module">
         // Importações do Firebase SDK
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -300,24 +265,10 @@
         // Lógica da Interface (UI)
         document.addEventListener('DOMContentLoaded', () => {
             const servicesDB = {
-                exterior: [
-                    { id: 1, name: 'Lavagem Detalhada', price: 180 },
-                    { id: 2, name: 'Polimento Técnico', price: 900 },
-                    { id: 3, name: 'Vitrificação de Pintura', price: 1500 },
-                    { id: 4, name: 'PPF (Paint Protection Film)', price: 5000 }
-                ],
-                interior: [
-                    { id: 5, name: 'Higienização Interna Completa', price: 350 },
-                    { id: 6, name: 'Hidratação e Vitrificação de Couro', price: 450 },
-                ],
-                rodas: [ // Renomeado para Rodas e Vidros
-                    { id: 7, name: 'Limpeza Detalhada de Rodas', price: 100 },
-                    { id: 8, name: 'Vitrificação de Rodas', price: 350 },
-                    { id: 9, name: 'Remoção de Chuva Ácida e Cristalização de Vidros', price: 250 },
-                ],
-                motor: [
-                    { id: 10, name: 'Limpeza Técnica de Motor', price: 250 },
-                ]
+                exterior: [ { id: 1, name: 'Lavagem Detalhada', price: 180 }, { id: 2, name: 'Polimento Técnico', price: 900 }, { id: 3, name: 'Vitrificação de Pintura', price: 1500 }, { id: 4, name: 'PPF (Paint Protection Film)', price: 5000 } ],
+                interior: [ { id: 5, name: 'Higienização Interna Completa', price: 350 }, { id: 6, name: 'Hidratação e Vitrificação de Couro', price: 450 }, ],
+                rodas: [ { id: 7, name: 'Limpeza Detalhada de Rodas', price: 100 }, { id: 8, name: 'Vitrificação de Rodas', price: 350 }, { id: 9, name: 'Remoção de Chuva Ácida e Cristalização de Vidros', price: 250 }, ],
+                motor: [ { id: 10, name: 'Limpeza Técnica de Motor', price: 250 }, ]
             };
             const hotspots = {
                 exterior: document.getElementById('hotspot-exterior'),
@@ -338,18 +289,12 @@
             function renderServiceOptions(category) {
                 Object.values(hotspots).forEach(h => h.classList.remove('active'));
                 hotspots[category].classList.add('active');
-                
                 const categoryName = hotspots[category].querySelector('.hotspot-label').textContent;
                 const services = servicesDB[category];
-                
                 let optionsHTML = `<h3 class="text-2xl font-bold text-white mb-4 capitalize">${categoryName}</h3><div class="space-y-3">`;
                 services.forEach(service => {
                     const isSelected = selectedServices.some(s => s.id === service.id);
-                    optionsHTML += `
-                        <label class="flex items-center justify-between bg-gray-800 p-3 rounded-lg cursor-pointer hover:bg-gray-700">
-                            <div><span class="text-white">${service.name}</span><span class="block text-sm text-gray-400">R$ ${service.price.toFixed(2)}</span></div>
-                            <input type="checkbox" data-id="${service.id}" data-name="${service.name}" data-price="${service.price}" class="form-checkbox h-5 w-5 text-red-600 bg-gray-700 border-gray-600 rounded focus:ring-red-500" ${isSelected ? 'checked' : ''}>
-                        </label>`;
+                    optionsHTML += `<label class="flex items-center justify-between bg-gray-800 p-3 rounded-lg cursor-pointer hover:bg-gray-700"><div><span class="text-white">${service.name}</span><span class="block text-sm text-gray-400">R$ ${service.price.toFixed(2)}</span></div><input type="checkbox" data-id="${service.id}" data-name="${service.name}" data-price="${service.price}" class="form-checkbox h-5 w-5 text-red-600 bg-gray-700 border-gray-600 rounded focus:ring-red-500" ${isSelected ? 'checked' : ''}></label>`;
                 });
                 optionsHTML += '</div>';
                 serviceOptionsContainer.innerHTML = optionsHTML;
@@ -391,16 +336,8 @@
                 const date = document.getElementById('schedule-date').value;
                 const services = selectedServices.map(s => s.name);
                 const total = selectedServices.reduce((sum, s) => sum + s.price, 0);
-
                 try {
-                    const docRef = await addDoc(collection(db, "agendamentos"), {
-                        clientName: name,
-                        vehicleModel: vehicle,
-                        scheduledAt: date,
-                        services: services,
-                        totalPrice: total,
-                        createdAt: new Date()
-                    });
+                    const docRef = await addDoc(collection(db, "agendamentos"), { clientName: name, vehicleModel: vehicle, scheduledAt: date, services: services, totalPrice: total, createdAt: new Date() });
                     console.log("Documento escrito com ID: ", docRef.id);
                     successModal.classList.remove('hidden');
                     setTimeout(() => successModal.classList.remove('opacity-0'), 10);
